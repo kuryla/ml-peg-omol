@@ -20,7 +20,7 @@ classifiers = [
 readme = "README.md"
 
 dependencies = [
-    "janus-core<1.0.0,>=0.7.5",
+    "janus-core<1.0.0,>=0.8.2",
     "plotly>=6.0.1",
     "dash>=3.0.2",
     "dash_bootstrap_components",
@@ -135,3 +135,6 @@ default-groups = [
     "docs",
     "pre-commit",
 ]
+
+[tool.uv.build-backend]
+module-root = ""
