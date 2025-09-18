@@ -12,7 +12,7 @@ as well as facilitating training and fine-tuning of MLIPs.
    developer_guide/index
    API documentation <apidoc/mlip_testing>
 
-``mlip-testing`` is released under the `BSD 3-Clause license <https://opensource.org/license/bsd-3-clause/>`_.
+``mlip-testing`` is released under the `GNU General Public License version 3 <https://opensource.org/license/gpl-3-0>`_.
 
 Indices and tables
 ==================
