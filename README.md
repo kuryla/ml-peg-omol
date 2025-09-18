@@ -77,7 +77,7 @@ for information about contributing new benchmarks and models.
 
 ## License
 
-[BSD 3-Clause License](LICENSE)
+[GNU General Public License version 3](LICENSE)
 
 [ci-badge]: https://github.com/ddmms/mlip-testing/actions/workflows/ci.yml/badge.svg?branch=main
 [ci-link]: https://github.com/ddmms/mlip-testing/actions
@@ -85,7 +85,7 @@ for information about contributing new benchmarks and models.
 [cov-link]: https://coveralls.io/github/ddmms/mlip-testing?branch=main
 [docs-badge]: https://github.com/ddmms/mlip-testing/actions/workflows/docs.yml/badge.svg
 [docs-link]: https://ddmms.github.io/mlip-testing/
-[license-badge]: https://img.shields.io/badge/License-BSD_3--Clause-blue.svg
-[license-link]: https://opensource.org/licenses/BSD-3-Clause
+[license-badge]: https://img.shields.io/badge/License-GPLv3-blue.svg
+[license-link]: https://opensource.org/license/gpl-3-0
 [doi-link]: https://doi.org/10.5281/zenodo.16904445
 [doi-badge]: https://zenodo.org/badge/DOI/10.5281/zenodo.16904445.svg
