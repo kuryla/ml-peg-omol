@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import pytest
 
+from ml_peg.models import models
+
 
 def pytest_addoption(parser):
     """Add flag to run tests for extra MLIPs."""
@@ -17,11 +19,21 @@ def pytest_addoption(parser):
         default=False,
         help="Run slow benchmarks",
     )
+    parser.addoption(
+        "--models",
+        action="store",
+        default=None,
+        help="MLIPs, in comma-separated list. Default: None.",
+    )
 
 
 def pytest_configure(config):
-    """Configure pytest to include marker for extra MLIPs."""
+    """Configure pytest to custom markers and CLI inputs."""
+    # Create custom marker for slow tests
     config.addinivalue_line("markers", "slow: mark test as slow calculations")
+
+    # Set current models from CLI input
+    models.current_models = config.getoption("--models")
 
 
 def pytest_collection_modifyitems(config, items):

@@ -14,9 +14,11 @@ from yaml import safe_load
 from ml_peg.analysis.utils.utils import calc_ranks, calc_scores, get_table_style
 from ml_peg.app import APP_ROOT
 from ml_peg.app.utils.build_components import build_weight_components
-from ml_peg.app.utils.register_callbacks import (
-    register_benchmark_to_category_callback,
-)
+from ml_peg.app.utils.register_callbacks import register_benchmark_to_category_callback
+from ml_peg.models.get_models import get_model_names
+from ml_peg.models.models import current_models
+
+MODELS = get_model_names(current_models)
 
 
 def get_all_tests(
@@ -171,10 +173,14 @@ def build_summary_table(
     """
     summary_data = {}
     for category_name, table in tables.items():
+        # Prepare rows for all current models
         if not summary_data:
-            summary_data = {row["MLIP"]: {} for row in table.data}
+            summary_data = {model: {} for model in MODELS}
+
         for row in table.data:
-            summary_data[row["MLIP"]][category_name] = row["Score"]
+            # Category tables may include models not to be included
+            if row["MLIP"] in summary_data:
+                summary_data[row["MLIP"]][category_name] = row["Score"]
 
     data = []
     for mlip in summary_data:
@@ -259,7 +265,7 @@ def build_tabs(
         return Div([layouts[tab]])
 
 
-def build_full_app(full_app: Dash) -> None:
+def build_full_app(full_app: Dash, category: str = "*") -> None:
     """
     Build full app layout and register callbacks.
 
@@ -267,9 +273,11 @@ def build_full_app(full_app: Dash) -> None:
     ----------
     full_app
         Full application with all sub-apps.
+    category
+        Category to build app for. Default is `*`, corresponding to all categories.
     """
     # Get layouts and tables for each test, grouped by categories
-    all_layouts, all_tables = get_all_tests()
+    all_layouts, all_tables = get_all_tests(category=category)
 
     if not all_layouts:
         raise ValueError("No tests were built successfully")
