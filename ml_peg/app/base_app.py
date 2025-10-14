@@ -74,6 +74,7 @@ class BaseApp(ABC):
             Div component with list all components for app.
         """
         # Define all components/placeholders
+        # Metric-weight controls defined inside build_test_layout for all benchmarks
         return build_test_layout(
             name=self.name,
             description=self.description,

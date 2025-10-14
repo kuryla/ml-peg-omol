@@ -14,6 +14,9 @@ from yaml import safe_load
 from ml_peg.analysis.utils.utils import calc_ranks, calc_scores, get_table_style
 from ml_peg.app import APP_ROOT
 from ml_peg.app.utils.build_components import build_weight_components
+from ml_peg.app.utils.register_callbacks import (
+    register_benchmark_to_category_callback,
+)
 
 
 def get_all_tests(
@@ -114,18 +117,16 @@ def build_category(
             category_title = category
             category_descrip = ""
 
-        # Build summary table
+        # Build category summary table
         summary_table = build_summary_table(
             all_tables[category], table_id=f"{category_title}-summary-table"
         )
         category_tables[category_title] = summary_table
 
-        # Build weight components for summary table
+        # Build weight components for category summary table
         weight_components = build_weight_components(
             header="Benchmark weights",
-            columns=list(all_tables[category].keys()),
-            input_ids=list(all_tables[category].keys()),
-            table_id=f"{category_title}-summary-table",
+            table=summary_table,
         )
 
         # Build full layout with summary table, weight controls, and test layouts
@@ -138,6 +139,14 @@ def build_category(
                 Div([all_layouts[category][test] for test in all_layouts[category]]),
             ]
         )
+
+        # Register benchmark table -> category table callbacks
+        for test_name, benchmark_table in all_tables[category].items():
+            register_benchmark_to_category_callback(
+                benchmark_table_id=benchmark_table.id,
+                category_table_id=f"{category_title}-summary-table",
+                benchmark_column=test_name,
+            )
 
     return category_layouts, category_tables
 
@@ -271,9 +280,7 @@ def build_full_app(full_app: Dash) -> None:
     summary_table = build_summary_table(category_tables)
     weight_components = build_weight_components(
         header="Benchmark weights",
-        columns=list(category_tables.keys()),
-        input_ids=list(category_tables.keys()),
-        table_id="summary-table",
+        table=summary_table,
     )
     # Build summary and category tabs
     build_tabs(full_app, category_layouts, summary_table, weight_components)
