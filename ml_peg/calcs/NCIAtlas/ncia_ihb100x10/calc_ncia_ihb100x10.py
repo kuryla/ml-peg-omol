@@ -81,8 +81,7 @@ class NCIA_IHB100x10_Benchmark(zntrack.Node):
         """Run new benchmark."""
 
         # Read in data and attach calculator
-        #data_path = get_benchmark_data("NCIA_IHB100x10.zip") / "NCIA_IHB100x10"
-        data_path = Path('../../../../../benchmarks/NCIA/NCIA_datasets/NCIA_IHB100x10')
+        data_path = get_benchmark_data("NCIA_IHB100x10.zip") / "NCIA_IHB100x10"
         self.get_ref_energies(data_path)
         
         calc = self.model.get_calculator()
