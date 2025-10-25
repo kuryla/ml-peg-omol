@@ -12,6 +12,13 @@ mace_mp_0b3:
   kwargs:
     model: "medium-0b3"
 
+# MACE-OMOL (organometallics) model used in ROST61 notebook
+mace-omol:
+  module: mace.calculators
+  class_name: mace_omol
+  device: "auto"
+  kwargs: {}
+
 #mace_mpa_0:
 #  module: mace.calculators
 #  class_name: mace_mp
