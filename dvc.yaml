@@ -1,8 +1,8 @@
 stages:
-  mace-omol_ProtonTransferBenchmark:
-    cmd: zntrack run calc_proton_transfer.ProtonTransferBenchmark --name mace-omol_ProtonTransferBenchmark
+  mace-omol_QUIDBenchmark:
+    cmd: zntrack run calc_QUID.QUIDBenchmark --name mace-omol_QUIDBenchmark
     metrics:
-    - nodes/mace-omol/ProtonTransferBenchmark/node-meta.json:
+    - nodes/mace-omol/QUIDBenchmark/node-meta.json:
         cache: true
     params:
-    - mace-omol_ProtonTransferBenchmark
+    - mace-omol_QUIDBenchmark
