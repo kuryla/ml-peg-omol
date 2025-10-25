@@ -1,0 +1,2 @@
+Model,Count,N_Molecules,MAE (kcal/mol),RMSE (kcal/mol),MSE (kcal/mol),Std (kcal/mol),Max |Error| (kcal/mol)
+mace-omol-2,53,3,0.26200390031936416,0.32331434353274474,-0.01665326216074477,0.3228851709097449,0.7326261462843977
