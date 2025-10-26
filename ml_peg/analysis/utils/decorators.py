@@ -102,14 +102,21 @@ def plot_parity(
                     )
                 )
 
-            full_fig = fig.full_figure_for_development()
-            x_range = full_fig.layout.xaxis.range
-            y_range = full_fig.layout.yaxis.range
+            # Compute plot limits directly from data (no Kaleido dependency)
+            x_values: list[float] = []
+            for mlip, value in results.items():
+                if mlip == "ref":
+                    continue
+                x_values.extend(value)
 
-            lims = [
-                np.min([x_range, y_range]),  # min of both axes
-                np.max([x_range, y_range]),  # max of both axes
-            ]
+            if x_values and ref:
+                x_min = min(min(x_values), min(ref))
+                x_max = max(max(x_values), max(ref))
+            else:
+                # Fallback if no data
+                x_min, x_max = 0.0, 1.0
+
+            lims = [x_min, x_max]
 
             fig.add_trace(
                 go.Scatter(
