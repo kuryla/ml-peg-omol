@@ -87,7 +87,7 @@ class NCIA_D1200_Benchmark(zntrack.Node):
         
         calc = self.model.get_calculator()
 
-        for label, ref_energy in self.get_ref_energies.items():
+        for label, ref_energy in self.ref_energies.items():
             xyz_fname = f"{label}_100.xyz"
             atoms = read(data_path / 'geometries' / xyz_fname)
             # exclude noble gases

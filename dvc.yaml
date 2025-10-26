@@ -1,8 +1,8 @@
 stages:
-  mace-omol_QUIDBenchmark:
-    cmd: zntrack run calc_QUID.QUIDBenchmark --name mace-omol_QUIDBenchmark
+  mace-omol_L7Benchmark:
+    cmd: zntrack run calc_L7.L7Benchmark --name mace-omol_L7Benchmark
     metrics:
-    - nodes/mace-omol/QUIDBenchmark/node-meta.json:
+    - nodes/mace-omol/L7Benchmark/node-meta.json:
         cache: true
     params:
-    - mace-omol_QUIDBenchmark
+    - mace-omol_L7Benchmark
