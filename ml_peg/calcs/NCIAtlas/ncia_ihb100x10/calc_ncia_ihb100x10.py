@@ -86,7 +86,7 @@ class NCIA_IHB100x10_Benchmark(zntrack.Node):
         
         calc = self.model.get_calculator()
 
-        for label, ref_energy in self.get_ref_energies.items():
+        for label, ref_energy in self.ref_energies.items():
             xyz_fname = f"{label[:-3]+label[-2:]}.xyz"
             atoms = read(data_path / 'geometries' / xyz_fname)
             atoms_a, atoms_b = self.get_monomers(atoms)
