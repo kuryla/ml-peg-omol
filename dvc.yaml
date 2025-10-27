@@ -1,8 +1,8 @@
 stages:
-  mace-omol_MME55Benchmark:
-    cmd: zntrack run calc_MME55.MME55Benchmark --name mace-omol_MME55Benchmark
+  mace-omol_GSCDB138Benchmark:
+    cmd: zntrack run calc_GSCDB138.GSCDB138Benchmark --name mace-omol_GSCDB138Benchmark
     metrics:
-    - nodes/mace-omol/MME55Benchmark/node-meta.json:
+    - nodes/mace-omol/GSCDB138Benchmark/node-meta.json:
         cache: true
     params:
-    - mace-omol_MME55Benchmark
+    - mace-omol_GSCDB138Benchmark

@@ -177,11 +177,18 @@ def get_table_style(
             raise ValueError(f"Column '{col}' not found in data.")
 
     for col in cols:
-        # Ensure that model is present in the row, and the score is not None
-        min_value = min([row[col] for row in data if col in row and row[col]])
-        max_value = max([row[col] for row in data if col in row and row[col]])
+        # Filter valid numeric values present in rows
+        col_vals = [row[col] for row in data if col in row and row[col] is not None]
+        if not col_vals:
+            # nothing to style for this column
+            continue
+        try:
+            min_value = min(col_vals)
+            max_value = max(col_vals)
+        except Exception:
+            continue
 
-        for val in [row[col] for row in data if col in row and row[col]]:
+        for val in col_vals:
             style_data_conditional.append(
                 {
                     "if": {"filter_query": f"{{{col}}} = {val}", "column_id": col},

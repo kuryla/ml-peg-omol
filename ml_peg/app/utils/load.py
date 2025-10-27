@@ -34,7 +34,20 @@ def rebuild_table(filename: str | Path, id="table-1") -> DataTable:
 
     data = table_json["data"]
     columns = table_json["columns"]
-    tooltip_header = table_json["tooltip_header"]
+    tooltip_header = table_json.get("tooltip_header", {})
+
+    # Gracefully handle empty data tables
+    if not data:
+        return DataTable(
+            data=data,
+            columns=columns,
+            tooltip_header=tooltip_header,
+            tooltip_delay=100,
+            tooltip_duration=None,
+            editable=True,
+            id=id,
+            sort_action="native",
+        )
 
     style = get_table_style(data)
 
