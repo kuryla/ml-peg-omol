@@ -1,8 +1,8 @@
 stages:
-  mace-omol_ROST61Benchmark:
-    cmd: zntrack run calc_ROST61.ROST61Benchmark --name mace-omol_ROST61Benchmark
+  mace-omol_MME55Benchmark:
+    cmd: zntrack run calc_MME55.MME55Benchmark --name mace-omol_MME55Benchmark
     metrics:
-    - nodes/mace-omol/ROST61Benchmark/node-meta.json:
+    - nodes/mace-omol/MME55Benchmark/node-meta.json:
         cache: true
     params:
-    - mace-omol_ROST61Benchmark
+    - mace-omol_MME55Benchmark
