@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+import json
 from collections import defaultdict
 
 import pytest
@@ -60,6 +61,28 @@ def ips() -> dict[str, list]:
         if not ref_stored:
             results["ref"] = refs
             ref_stored = True
+
+    # Side-effect: copy structures for first available model into app assets dir
+    try:
+        # Determine ID order used in plot/table
+        ids = complex_ids()
+        if ids:
+            src_root = Path(__file__).parents[3] / "calcs" / "tm_complexes" / "3dTMV" / "data" / "3dtmv_structures"
+            dst_root = OUT_PATH / MODELS[0]
+            dst_root.mkdir(parents=True, exist_ok=True)
+            for cid in ids:
+                src = src_root / str(cid) / "struc.xyz"
+                if src.exists():
+                    # Write a copy under assets data
+                    from ase.io import read, write
+
+                    atoms = read(src)
+                    write(dst_root / f"{cid}.xyz", atoms)
+            # Save the order to preserve index mapping in the app
+            with open(OUT_PATH / "ids.json", "w") as fh:
+                json.dump(ids, fh)
+    except Exception:
+        pass
     return results
 
 
@@ -144,4 +167,3 @@ def metrics(
 
 def test_3dtmv(metrics: dict[str, dict]) -> None:
     return
-
