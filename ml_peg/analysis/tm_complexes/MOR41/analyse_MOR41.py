@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+import json
 from collections import defaultdict
 
 import pytest
@@ -58,6 +59,34 @@ def energies() -> dict[str, list]:
         if not ref_stored:
             results["ref"] = refs
             ref_stored = True
+    # Side-effect: copy representative product structure for each reaction
+    try:
+        from ase.io import read, write
+        from ml_peg.calcs.tm_complexes.MOR41.calc_MOR41 import create_reaction_mapping
+
+        nums = reaction_numbers()
+        if nums:
+            mapping = create_reaction_mapping()
+            src_root = Path(__file__).parents[3] / "calcs" / "tm_complexes" / "MOR41" / "data" / "geometries"
+            dst_root = OUT_PATH / MODELS[0]
+            dst_root.mkdir(parents=True, exist_ok=True)
+            ids_order = []
+            for n in nums:
+                rid = f"MOR41_{n:02d}"
+                ids_order.append(rid)
+                info = mapping.get(rid, {})
+                # Prefer first product molecule as representative
+                products = info.get("products", [])
+                mol = products[0][0] if products else None
+                if mol:
+                    f = src_root / mol / "mol.xyz"
+                    if f.exists():
+                        at = read(f)
+                        write(dst_root / f"{rid}.xyz", at)
+            with open(OUT_PATH / "ids.json", "w") as fh:
+                json.dump(ids_order, fh)
+    except Exception:
+        pass
     return results
 
 
@@ -106,4 +135,3 @@ def metrics(mor41_mae: dict[str, float], mor41_mae_oxidative: dict[str, float]) 
 
 def test_mor41(metrics: dict[str, dict]) -> None:
     return
-

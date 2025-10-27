@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+import json
 
 import pytest
 
@@ -57,6 +58,25 @@ def energies() -> dict[str, list]:
         if not ref_stored:
             results["ref"] = refs
             ref_stored = True
+    # Side-effect: materialize dimer structures for first model
+    try:
+        import h5py
+        from ase import Atoms
+        ids = dimer_ids()
+        if ids:
+            h5 = Path(__file__).parents[3] / "calcs" / "non_covalent_interactions" / "QUID" / "data" / "QUID.h5"
+            dst_root = OUT_PATH / MODELS[0]
+            dst_root.mkdir(parents=True, exist_ok=True)
+            with h5py.File(h5, "r") as f:
+                for name in ids:
+                    g = f[name]
+                    nums = g["atoms"]["dimer"][()]
+                    pos = g["positions"]["dimer"][()]
+                    Atoms(numbers=nums, positions=pos).write(dst_root / f"{name}.xyz")
+            with open(OUT_PATH / "ids.json", "w") as fh:
+                json.dump(ids, fh)
+    except Exception:
+        pass
     return results
 
 
@@ -74,4 +94,3 @@ def metrics(energies: dict[str, list]) -> dict[str, dict]:
 
 def test_quid(metrics: dict[str, dict]) -> None:
     return
-

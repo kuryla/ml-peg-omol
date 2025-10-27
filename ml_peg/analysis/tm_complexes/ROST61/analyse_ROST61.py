@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+import json
 
 import pytest
 
@@ -59,6 +60,39 @@ def reaction_energies() -> dict[str, list]:
         if not ref_stored:
             results["ref"] = ref_vals
             ref_stored = True
+    # Side-effect: write representative structures per reaction for first model
+    try:
+        from ase.io import read, write
+        from ml_peg.calcs.tm_complexes.ROST61.calc_ROST61 import (
+            get_dirs,
+            create_reaction_mapping,
+        )
+
+        ids = reaction_ids()
+        if ids:
+            geom_dir, _ = get_dirs()
+            mapping = create_reaction_mapping()
+            dst_root = OUT_PATH / MODELS[0]
+            dst_root.mkdir(parents=True, exist_ok=True)
+            for rid in ids:
+                mols = [m for m, _ in mapping.get(rid, {}).get("reactants", [])] + [
+                    m for m, _ in mapping.get(rid, {}).get("products", [])
+                ]
+                # pick largest molecule by atom count
+                best = None
+                best_n = -1
+                for mol in mols:
+                    f = geom_dir / mol / "mol.xyz"
+                    if f.exists():
+                        at = read(f)
+                        if len(at) > best_n:
+                            best, best_n = at, len(at)
+                if best is not None:
+                    write(dst_root / f"{rid}.xyz", best)
+            with open(OUT_PATH / "ids.json", "w") as fh:
+                json.dump(ids, fh)
+    except Exception:
+        pass
     return results
 
 
@@ -81,4 +115,3 @@ def metrics(rost61_mae: dict[str, float]) -> dict[str, dict]:
 
 def test_rost61(metrics: dict[str, dict]) -> None:
     return
-
