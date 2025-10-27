@@ -1,0 +1,39 @@
+/* Matbench Discovery inspired dark theme */
+:root {
+  --bg: #061e25;
+  --surface: #222222;
+  --text: rgb(208, 208, 208);
+  --muted: rgb(140, 140, 140);
+  --accent: cornflowerblue;
+  --accent-2: mediumseagreen;
+  --border: rgba(255, 255, 255, 0.125);
+}
+
+html, body { height: 100%; }
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial;
+  line-height: 1.45;
+}
+
+.page { max-width: 1200px; margin: 0 auto; padding: 24px 20px 48px; }
+.hero {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+              radial-gradient(800px 400px at 90% -10%, rgba(100, 149, 237, 0.18), transparent);
+  border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; margin-bottom: 20px;
+}
+h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: 0.2px; color: var(--text); }
+h2 { font-size: 1.4rem; font-weight: 600; color: var(--text); opacity: 0.9; }
+h3 { font-size: 1.05rem; font-weight: 500; color: var(--muted); }
+a { color: var(--accent); } a:hover { color: var(--accent-2); }
+
+.dash-tabs .tab { border: 1px solid var(--border); background: var(--surface); border-radius: 10px 10px 0 0; margin-right: 6px; color: var(--text) !important; }
+.dash-table-container .dash-spreadsheet-container { background-color: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+.dash-table-container .dash-spreadsheet-container .cell { color: var(--text) !important; }
+.dash-table-container .dash-spreadsheet-container .column-header-name { color: var(--text) !important; font-weight: 600; }
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+label { color: var(--muted); }
+input[type="number"] { background: #0e0f13; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; }
+.graph-placeholder { border: 1px dashed var(--border); border-radius: 10px; padding: 10px; margin-top: 10px; }
+.dash-graph text, .dash-graph .legend text { fill: var(--text) !important; }
