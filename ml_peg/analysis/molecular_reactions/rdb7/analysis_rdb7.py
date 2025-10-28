@@ -1,4 +1,4 @@
-"""Analyse Maltose222 conformer benchmark 10.1021/acs.jctc.6b00876."""
+"""Analyse RDB7 reaction barriers benchmark. 10.1038/s41597-022-01529-6"""
 
 from __future__ import annotations
 
@@ -18,8 +18,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "maltose222" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "maltose222"
+CALC_PATH = CALCS_ROOT / "single_point" / "rdb7" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "single_point" / "rdb7"
 
 
 def labels() -> list:
@@ -31,24 +31,23 @@ def labels() -> list:
     list
         List of all system names.
     """
-    for model_name in MODELS:
-        labels_list = [path.stem for path in sorted((CALC_PATH / model_name).glob("*"))]
-        return labels_list
+    labels_list = [str(i).zfill(6) for i in range(0, 11961)]
+    return labels_list
 
 
 @pytest.fixture
 @plot_parity(
-    filename=OUT_PATH / "figure_maltose222.json",
-    title="Energies",
-    x_label="Predicted energy / eV",
-    y_label="Reference energy / eV",
+    filename=OUT_PATH / "figure_rdb7_barriers.json",
+    title="Reaction barriers",
+    x_label="Predicted barrier / eV",
+    y_label="Reference barrier / eV",
     hoverdata={
         "Labels": labels(),
     },
 )
-def conformer_energies() -> dict[str, list]:
+def barrier_heights() -> dict[str, list]:
     """
-    Get conformer energies for all systems.
+    Get barrier heights for all systems.
 
     Returns
     -------
@@ -60,69 +59,68 @@ def conformer_energies() -> dict[str, list]:
 
     for model_name in MODELS:
         for label in labels():
-            atoms = read(CALC_PATH / model_name / f'{label}.xyz')
-
-            results[model_name].append(atoms.info['model_rel_energy'])
+            atoms = read(CALC_PATH / model_name / f'{label}_ts.xyz')
+            results[model_name].append(atoms.info['model_forward_barrier'])
             if not ref_stored:
-                results['ref'].append(atoms.info['ref_energy'])
+                results['ref'].append(atoms.info['ref_forward_barrier'])
             
             # Write structures for app
             structs_dir = OUT_PATH / model_name
             structs_dir.mkdir(parents=True, exist_ok=True)
-            write(structs_dir / f"{label}.xyz", atoms)
+            write(structs_dir / f"{label}_ts.xyz", atoms)
         ref_stored = True
     return results
 
 
 @pytest.fixture
-def get_mae(conformer_energies) -> dict[str, float]:
+def get_mae(barrier_heights) -> dict[str, float]:
     """
-    Get mean absolute error for conformer energies.
+    Get mean absolute error for barrier heights.
 
     Parameters
     ----------
-    conformer_energies
-        Dictionary of reference and predicted conformer energies.
+    barrier_heights
+        Dictionary of reference and predicted barrier heights.
 
     Returns
     -------
     dict[str, float]
-        Dictionary of predicted conformer energies errors for all models.
+        Dictionary of predicted barrier height errors for all models.
     """
     results = {}
     for model_name in MODELS:
         results[model_name] = mae(
-            conformer_energies["ref"], conformer_energies[model_name]
+            barrier_heights["ref"], barrier_heights[model_name]
         )
     return results
 
 
 @pytest.fixture
-def get_rmse(conformer_energies) -> dict[str, float]:
+def get_rmse(barrier_heights) -> dict[str, float]:
     """
-    Get root mean square error for conformer energies.
+    Get root mean square error for barrier heights.
 
     Parameters
     ----------
-    conformer energies
-        Dictionary of reference and predicted conformer energies.
+    barrier_heights
+        Dictionary of reference and predicted barrier heights.
 
     Returns
     -------
     dict[str, float]
-        Dictionary of predicted conformer energies errors for all models.
+        Dictionary of predicted barrier height errors for all models.
     """
     results = {}
     for model_name in MODELS:
         results[model_name] = rmse(
-            conformer_energies["ref"], conformer_energies[model_name]
+            barrier_heights["ref"], barrier_heights[model_name]
         )
     return results
 
 
 @pytest.fixture
 @build_table(
-    filename=OUT_PATH / "maltose222_metrics_table.json",
+    filename=OUT_PATH / "rdb7_barriers_metrics_table.json",
     metric_tooltips={
         "Model": "Name of the model",
         "MAE": "Mean Absolute Error (eV)",
@@ -152,9 +150,9 @@ def metrics(get_mae: dict[str, float], get_rmse: dict[str, float]) -> dict[str, 
     }
 
 
-def test_maltose222(metrics: dict[str, dict]) -> None:
+def test_rdb7_barriers(metrics: dict[str, dict]) -> None:
     """
-    Run Maltose222 test.
+    Run rdb7_barriers test.
 
     Parameters
     ----------

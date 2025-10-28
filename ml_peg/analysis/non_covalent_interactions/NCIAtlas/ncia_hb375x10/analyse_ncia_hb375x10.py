@@ -22,7 +22,7 @@ KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
 CALC_PATH = CALCS_ROOT / "NCIAtlas" / "ncia_hb375x10" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "NCIAtlas" / "ncia_hb375x10"
-print(APP_ROOT)
+
 
 def labels() -> list:
     """
