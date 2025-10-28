@@ -28,9 +28,19 @@ To get all the latest changes, ML-PEG can also be installed from GitHub:
 Running the application
 -----------------------
 
-A Docker image of the latest changes can be pulled from the GitHub container registry,
-following the command that can be found under this repository's
-`packages <https://github.com/ddmms/ml-peg/pkgs/container/ml-peg-app>`_:
+You can use `Docker <https://www.docker.com>`_ or `Podman <https://podman.io/>`_ to
+build and/or run the ML-PEG app yourself.
+
+.. tip::
+
+    The commands below will assume you are using Docker. To use Podman, replace
+    ``docker`` with ``podman``, e.g. ``podman pull``, ``podman build``, and
+    ``podman run``.
+
+
+A Docker image with the latest changes can be pulled from the GitHub container
+registry, following the command that can be found under this repository's
+`packages <https://github.com/ddmms/ml-peg/pkgs/container/ml-peg-app>`_.
 
 .. note::
 
@@ -41,18 +51,18 @@ following the command that can be found under this repository's
 
 Alternatively, to build the container yourself, you can use the
 `Dockerfile <https://github.com/ddmms/ml-peg/blob/main/containers/Dockerfile>`_
-provided, and run:
+provided. From the ``ml-peg`` directory, run:
 
 .. code-block:: bash
 
-    docker build . -t ml-peg-app
+    docker build -t ml-peg-app -f containers/Dockerfile .
 
 
-Once built, you can mount your current directory and start the app by running:
+Once built, you can mount your current application data and start the app by running:
 
 .. code-block:: bash
 
-    docker run --volume .:/app  --publish 8050:8050 ml-peg-app
+    docker run --volume ./ml_peg/app/data:/app/ml_peg/app/data  --publish 8050:8050 ml-peg-app
 
 .. tip::
 
@@ -65,7 +75,7 @@ file provided, via Docker Compose:
 
 .. code-block:: bash
 
-    docker compose up -d
+    docker compose -f containers/compose.yml up -d
 
 
 The app should now be accessible at http://localhost:8050.
