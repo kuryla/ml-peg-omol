@@ -23,7 +23,7 @@ KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
 CALC_PATH = CALCS_ROOT / "single_point" / "dipconfs" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "single_point" / "dipconfs"
-print(APP_ROOT)
+
 
 def labels() -> list:
     """
