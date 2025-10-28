@@ -59,7 +59,6 @@ class BaseApp(ABC):
         self.table_path = table_path
         self.extra_components = extra_components
         self.docs_url = docs_url
-
         self.table_id = f"{self.name}-table"
         self.table = rebuild_table(self.table_path, id=self.table_id)
         self.layout = self.build_layout()
@@ -80,6 +79,7 @@ class BaseApp(ABC):
             description=self.description,
             docs_url=self.docs_url,
             table=self.table,
+            thresholds=getattr(self.table, "thresholds", None),
             extra_components=self.extra_components,
         )
 

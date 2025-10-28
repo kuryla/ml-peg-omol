@@ -16,6 +16,8 @@ MODELS = get_model_names(current_models)
 CALC_PATH = CALCS_ROOT / "supramolecular" / "LNCI16" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "supramolecular" / "LNCI16"
 
+LNCI16_THRESHOLDS = {"MAE": (0.0, 100.0)}
+
 
 def get_system_names() -> list[str]:
     """
@@ -215,6 +217,7 @@ def lnci16_mae(interaction_energies) -> dict[str, float]:
         "Model": "Name of the model",
         "MAE": "Mean Absolute Error for all systems (kcal/mol)",
     },
+    thresholds=LNCI16_THRESHOLDS,
 )
 def metrics(lnci16_mae: dict[str, float]) -> dict[str, dict]:
     """

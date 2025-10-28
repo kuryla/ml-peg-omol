@@ -18,6 +18,7 @@ CALC_PATH = CALCS_ROOT / "nebs" / "li_diffusion" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "nebs" / "li_diffusion"
 
 REF_VALUES = {"path_b": 0.27, "path_c": 2.5}
+LI_DIFFUSION_THRESHOLDS = {"Path B error": (0.02, 0.4), "Path C error": (0.1, 0.8)}
 
 
 def plot_nebs(model: str, path: Literal["b", "c"]) -> None:
@@ -120,6 +121,7 @@ def path_c_error() -> dict[str, float]:
         "Path B error": "Energy Barrier error for path B (eV)",
         "Path C error": "Energy Barrier error for path C (eV)",
     },
+    thresholds=LI_DIFFUSION_THRESHOLDS,
 )
 def metrics(
     path_b_error: dict[str, float], path_c_error: dict[str, float]

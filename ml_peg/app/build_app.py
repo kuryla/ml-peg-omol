@@ -11,10 +11,11 @@ from dash.dcc import Store, Tab, Tabs
 from dash.html import H1, H3, Div
 from yaml import safe_load
 
-from ml_peg.analysis.utils.utils import calc_ranks, calc_scores, get_table_style
+from ml_peg.analysis.utils.utils import calc_ranks, calc_table_scores, get_table_style
 from ml_peg.app import APP_ROOT
 from ml_peg.app.utils.build_components import build_weight_components
 from ml_peg.app.utils.register_callbacks import register_benchmark_to_category_callback
+from ml_peg.app.utils.utils import calculate_column_widths, rank_format, sig_fig_format
 from ml_peg.models.get_models import get_model_names
 from ml_peg.models.models import current_models
 
@@ -129,6 +130,7 @@ def build_category(
         weight_components = build_weight_components(
             header="Benchmark weights",
             table=summary_table,
+            column_widths=getattr(summary_table, "column_widths", None),
         )
 
         # Build full layout with summary table, weight controls, and test layouts
@@ -137,6 +139,11 @@ def build_category(
                 H1(category_title),
                 H3(category_descrip),
                 summary_table,
+                Store(
+                    id=f"{category_title}-summary-table-computed-store",
+                    storage_type="session",
+                    data=summary_table.data,
+                ),
                 weight_components,
                 Div([all_layouts[category][test] for test in all_layouts[category]]),
             ]
@@ -186,21 +193,52 @@ def build_summary_table(
     for mlip in summary_data:
         data.append({"MLIP": mlip} | summary_data[mlip])
 
-    data = calc_scores(data)
+    data = calc_table_scores(data)
     data = calc_ranks(data)
 
     columns_headers = ("MLIP",) + tuple(tables.keys()) + ("Score", "Rank")
+
     columns = [{"name": headers, "id": headers} for headers in columns_headers]
+    for column in columns:
+        column_id = column["id"]
+        if column_id == "Rank":
+            column["type"] = "numeric"
+            column["format"] = rank_format()
+        elif column_id != "MLIP":
+            column["type"] = "numeric"
+            column["format"] = sig_fig_format()
 
     style = get_table_style(data)
 
-    return DataTable(
+    # Calculate column widths based on column names
+    column_widths = calculate_column_widths(columns_headers)
+    style_cell_conditional = []
+    for column_id, width in column_widths.items():
+        col_width = f"{width}px"
+        alignment = "left" if column_id == "MLIP" else "center"
+        style_cell_conditional.append(
+            {
+                "if": {"column_id": column_id},
+                "width": col_width,
+                "minWidth": col_width,
+                "maxWidth": col_width,
+                "textAlign": alignment,
+            }
+        )
+
+    table = DataTable(
         data=data,
         columns=columns,
         id=table_id,
         sort_action="native",
         style_data_conditional=style,
+        style_cell_conditional=style_cell_conditional,
+        persistence=True,
+        persistence_type="session",
+        persisted_props=["data"],
     )
+    table.column_widths = column_widths
+    return table
 
 
 def build_tabs(
@@ -287,8 +325,9 @@ def build_full_app(full_app: Dash, category: str = "*") -> None:
     # Build overall summary table
     summary_table = build_summary_table(category_tables)
     weight_components = build_weight_components(
-        header="Benchmark weights",
+        header="Category weights",
         table=summary_table,
+        column_widths=getattr(summary_table, "column_widths", None),
     )
     # Build summary and category tabs
     build_tabs(full_app, category_layouts, summary_table, weight_components)

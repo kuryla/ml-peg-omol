@@ -16,6 +16,8 @@ MODELS = get_model_names(current_models)
 CALC_PATH = CALCS_ROOT / "surfaces" / "elemental_slab_oxygen_adsorption" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "surfaces" / "elemental_slab_oxygen_adsorption"
 
+ELEMENTAL_OXYGEN_THRESHOLDS = {"MAE": (0.1, 2.0)}
+
 
 def compute_adsorption_energy(
     surface_e: float, mol_surf_e: float, molecule_e: float
@@ -143,6 +145,7 @@ def adsorption_mae(adsorption_energies) -> dict[str, float]:
         "Model": "Name of the model",
         "MAE": "Mean Absolute Error (eV)",
     },
+    thresholds=ELEMENTAL_OXYGEN_THRESHOLDS,
 )
 def metrics(adsorption_mae: dict[str, float]) -> dict[str, dict]:
     """

@@ -16,6 +16,8 @@ MODELS = get_model_names(current_models)
 CALC_PATH = CALCS_ROOT / "surfaces" / "S24" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "surfaces" / "S24"
 
+S24_THRESHOLDS = {"MAE": (0.05, 0.5)}
+
 
 def compute_adsorption_energy(
     surface_e: float, mol_surf_e: float, molecule_e: float
@@ -161,6 +163,7 @@ def s24_mae(adsorption_energies) -> dict[str, float]:
         "Model": "Name of the model",
         "MAE": "Mean Absolute Error (eV)",
     },
+    thresholds=S24_THRESHOLDS,
 )
 def metrics(s24_mae: dict[str, float]) -> dict[str, dict]:
     """

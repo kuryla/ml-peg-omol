@@ -12,7 +12,7 @@ from dash import dash_table
 import numpy as np
 import plotly.graph_objects as go
 
-from ml_peg.analysis.utils.utils import calc_ranks, calc_scores
+from ml_peg.analysis.utils.utils import calc_ranks, calc_table_scores
 
 
 def plot_parity(
@@ -250,16 +250,33 @@ def plot_scatter(
 def build_table(
     filename: str = "table.json",
     metric_tooltips: dict[str, str] | None = None,
+    normalize: bool = True,
+    thresholds: dict[str, tuple[float, float]] | None = None,
+    normalizer: Callable[[float, float, float], float] | None = None,
 ) -> Callable:
     """
-    Build table MLIP results.
+    Build DataTable, including optional metric normalisation.
+
+    If `normalize` is `True`, by default each metric is normalised to 0-1 scale where:
+    - Values <= Y get score 0
+    - Values >= X get score 1
+    - Values between Y and X scale linearly, by default.
 
     Parameters
     ----------
     filename
-        Filename to save table.
+        Filename to save table. Default is "table.json".
     metric_tooltips
-        Tooltips for table metric headers.
+        Tooltips for table metric headers. Defaults are set for "MLIP", "Score", and
+        "Rank".
+    normalize
+        Whether to apply normalisation when calculating the score. Default is True.
+    thresholds
+        Mapping of metric names to (X, Y) tuples where X is the upper threshold and
+        Y is the lower threshold. Required if `normalize` is `True`.
+    normalizer
+        Optional function to map (value, X, Y) -> normalised score. Default is
+        ml_peg.analysis.utils.utils.normalize_metric.
 
     Returns
     -------
@@ -320,15 +337,30 @@ def build_table(
 
             summary_tooltips = {
                 "MLIP": "Name of the model",
-                "Score": "Average of metrics (lower is better)",
                 "Rank": "Model rank based on score (lower is better)",
             }
+            if normalize:
+                summary_tooltips["Score"] = (
+                    "Average of normalised metrics (higher is better)"
+                )
+            else:
+                summary_tooltips["Score"] = "Average of metrics"
+
             if metric_tooltips:
                 tooltip_header = metric_tooltips | summary_tooltips
             else:
                 tooltip_header = summary_tooltips
 
-            metrics_data = calc_scores(metrics_data)
+            # Calculate scores, including any normalisation
+            if normalize:
+                metrics_data = calc_table_scores(
+                    metrics_data=metrics_data,
+                    thresholds=thresholds,
+                    normalizer=normalizer,
+                )
+            else:
+                metrics_data = calc_table_scores(metrics_data)
+
             metrics_data = calc_ranks(metrics_data)
             metrics_columns += ("Score", "Rank")
 
@@ -347,6 +379,7 @@ def build_table(
                         "data": table.data,
                         "columns": table.columns,
                         "tooltip_header": tooltip_header,
+                        "thresholds": thresholds,
                     },
                     fp,
                 )

@@ -17,6 +17,8 @@ MODELS = get_model_names(current_models)
 CALC_PATH = CALCS_ROOT / "surfaces" / "OC157" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "surfaces" / "OC157"
 
+OC157_THRESHOLDS = {"MAE": (0.0, 1.0), "Ranking Error": (0.0, 1.0)}
+
 
 def get_relative_energies(energies: list) -> list:
     """
@@ -183,6 +185,7 @@ def ranking_error(relative_energies: dict[str, list]) -> dict[str, float]:
         "MAE": "Mean Absolute Error (meV)",
         "Ranking Error": "Error in ranking stability across triplets",
     },
+    thresholds=OC157_THRESHOLDS,
 )
 def metrics(
     oc157_mae: dict[str, float], ranking_error: dict[str, float]
