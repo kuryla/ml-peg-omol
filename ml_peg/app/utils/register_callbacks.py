@@ -5,6 +5,7 @@ from __future__ import annotations
 from dash import Input, Output, State, callback, ctx
 from dash.exceptions import PreventUpdate
 
+<<<<<<< Updated upstream
 from ml_peg.analysis.utils.utils import (
     calc_metric_scores,
     calc_table_scores,
@@ -12,6 +13,11 @@ from ml_peg.analysis.utils.utils import (
     update_score_rank_style,
 )
 from ml_peg.app.utils.utils import clean_thresholds, get_scores
+=======
+from ml_peg.analysis.utils.utils import calc_ranks, calc_scores, get_table_style
+from ml_peg.app.utils.load import RANK_STYLE_RULES
+from ml_peg.app.utils.load import _rank_gradient_styles
+>>>>>>> Stashed changes
 
 
 def register_summary_table_callbacks() -> None:
@@ -58,7 +64,15 @@ def register_summary_table_callbacks() -> None:
                     row[tab] = values[row["MLIP"]]
 
         # Update table contents
+<<<<<<< Updated upstream
         return update_score_rank_style(summary_data, stored_weights)
+=======
+        summary_data = calc_scores(summary_data, stored_weights)
+        summary_data = calc_ranks(summary_data)
+        style = get_table_style(summary_data) + _rank_gradient_styles(summary_data) + RANK_STYLE_RULES
+
+        return summary_data, style
+>>>>>>> Stashed changes
 
 
 def register_category_table_callbacks(
@@ -121,8 +135,19 @@ def register_category_table_callbacks(
             if not stored_raw_data:
                 raise PreventUpdate
 
+<<<<<<< Updated upstream
             thresholds = clean_thresholds(stored_threshold)
             trigger_id = ctx.triggered_id
+=======
+        Returns
+        -------
+        list[dict]
+            Updated table data.
+        """
+        table_data = calc_scores(table_data, stored_weights)
+        table_data = calc_ranks(table_data)
+        style = get_table_style(table_data) + _rank_gradient_styles(table_data) + RANK_STYLE_RULES
+>>>>>>> Stashed changes
 
             # Tab switches and toggle flips reuse the cached scored rows rather than
             # recalculating scores, we only re-score when weights/thresholds change.
@@ -297,8 +322,18 @@ def register_benchmark_to_category_callback(
             if mlip in benchmark_scores:
                 row[benchmark_column] = benchmark_scores[mlip]
 
+<<<<<<< Updated upstream
         category_rows, style = update_score_rank_style(category_rows, category_weights)
         return category_rows, style, category_rows
+=======
+        # Recompute category Score and Rank using its existing weights
+        weights = category_weights if category_weights else {}
+        category_data = calc_scores(category_data, weights)
+        category_data = calc_ranks(category_data)
+        style = get_table_style(category_data) + _rank_gradient_styles(category_data) + RANK_STYLE_RULES
+
+        return category_data, style
+>>>>>>> Stashed changes
 
 
 def register_weight_callbacks(input_id: str, table_id: str, column: str) -> None:

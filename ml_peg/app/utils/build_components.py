@@ -90,6 +90,7 @@ def build_weight_input(
     )
 
     return Div(
+<<<<<<< Updated upstream
         DCC_Input(
             id=input_id,
             type="number",
@@ -105,6 +106,36 @@ def build_weight_input(
             },
         ),
         style=wrapper_style,
+=======
+        [
+            Label(label),
+            Div(
+                [
+                    Div(
+                        Slider(
+                            id=slider_id,
+                            min=0,
+                            max=5,
+                            step=0.1,
+                            value=default_value,
+                            tooltip={"always_visible": False},
+                            marks=None,
+                        ),
+                        style={"flex": "1 1 80%"},
+                    ),
+                    DCC_Input(
+                        id=input_id,
+                        type="number",
+                        value=default_value,
+                        step=0.1,
+                        className="text-input",
+                        style={"width": "100px"},
+                    ),
+                ],
+                className="controls",
+            ),
+        ]
+>>>>>>> Stashed changes
     )
 
 
@@ -137,6 +168,12 @@ def build_weight_components(
     Div
         Div containing header, weight sliders, text boxes and reset button.
     """
+<<<<<<< Updated upstream
+=======
+    # Build slider+input list (hidden by default within a <details> disclosure)
+    layout: list[Component] = []
+
+>>>>>>> Stashed changes
     # Identify metric columns (exclude reserved columns)
     reserved = {"MLIP", "Score", "Rank", "id"}
     columns = [col["id"] for col in table.columns if col.get("id") not in reserved]
@@ -159,6 +196,7 @@ def build_weight_components(
 
     container = Div(
         [
+<<<<<<< Updated upstream
             Div(
                 [
                     Div(
@@ -201,6 +239,13 @@ def build_weight_components(
                     "maxWidth": "100%",
                     "border": "1px solid transparent",  # #dee2e6 or transparent
                 },
+=======
+            Button(
+                "Reset Weights",
+                id=f"{table.id}-reset-button",
+                n_clicks=0,
+                className="button button-outline mt-md",
+>>>>>>> Stashed changes
             ),
             *weight_inputs,
             Div(
@@ -263,7 +308,27 @@ def build_weight_components(
     for column, input_id in zip(columns, input_ids, strict=True):
         register_weight_callbacks(input_id=input_id, table_id=table.id, column=column)
 
-    return Div(layout)
+    # Wrap in collapsible disclosure to save vertical space
+    return Details(
+        [
+            Summary(
+                header,
+                style={
+                    "cursor": "pointer",
+                    "fontWeight": 500,
+                    "fontSize": "0.875rem",
+                    "color": "var(--color-text-secondary)",
+                    "padding": 0,
+                    "margin": 0,
+                    "display": "inline-block",
+                    "textDecoration": "underline",
+                },
+            ),
+            Div(layout, className="mt-sm"),
+        ],
+        className="weights-toggle",
+        open=False,
+    )
 
 
 def build_test_layout(
@@ -303,10 +368,13 @@ def build_test_layout(
     Div
         Layout for test layout.
     """
-    layout_contents = [
-        H2(name, style={"color": "black"}),
-        H3(description),
-    ]
+    # Header area for test card
+    header = Div(
+        [H2(name), H3(description)],
+        className="card-header",
+    )
+
+    layout_contents = []
 
     layout_contents.extend(
         [
@@ -384,6 +452,7 @@ def build_test_layout(
     if extra_components:
         layout_contents.extend(extra_components)
 
+<<<<<<< Updated upstream
     return Div(layout_contents)
 
 
@@ -619,4 +688,8 @@ def build_threshold_inputs(
             Div(cells, id=f"{table_id}-threshold-grid", style=container_style),
             store,
         ]
+=======
+    return Div(
+        [header, Div(layout_contents, className="card-body")], className="card"
+>>>>>>> Stashed changes
     )

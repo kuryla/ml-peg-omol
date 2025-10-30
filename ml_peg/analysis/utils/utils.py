@@ -238,7 +238,8 @@ def get_table_style(
 
     # All columns other than MLIP and ID (not displayed) should be coloured
     if all_cols:
-        cols = data[0].keys() - {"MLIP", "id"}
+        # Exclude non-metric columns from automatic colormap
+        cols = data[0].keys() - {"MLIP", "id", "Rank"}
     elif col_names:
         if isinstance(col_names, str):
             cols = [col_names]

@@ -30,6 +30,7 @@ def run_app(
         Whether to run with Dash debugging. Default is `True`.
     """
     full_app = Dash(__name__, assets_folder=DATA_PATH)
+    full_app.config.suppress_callback_exceptions = True
     build_full_app(full_app, category=category)
 
     print(f"Starting Dash app on port {port}...")
