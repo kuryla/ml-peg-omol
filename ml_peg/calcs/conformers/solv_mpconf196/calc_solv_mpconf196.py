@@ -52,7 +52,7 @@ class solvMPCONF196_Benchmark(zntrack.Node):
             label = row[1][0]
             if label[-1].isnumeric():
                 label = label.replace('_', '')
-            E_ref = float(row[1][1]) * KCAL_TO_EV
+            E_ref = float(row[1][1]) * units.Hartree
             self.ref_energies[label] = E_ref
 
     def run(self):
