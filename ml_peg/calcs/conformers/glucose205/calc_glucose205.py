@@ -34,19 +34,20 @@ OUT_PATH = Path(__file__).parent / "outputs"
 
 
 class Glucose205_Benchmark(zntrack.Node):
-    """
-
-    """
-    
     model: NodeWithCalculator = zntrack.deps()
     model_name: str = zntrack.params()
 
+    @staticmethod
+    def get_atoms(atoms_path):
+        atoms = read(atoms_path)
+        atoms.info['charge'] = 0
+        atoms.info['spin'] = 1
+        return atoms
 
     def get_labels(self):
         self.labels = []
         for system_path in sorted((DATA_PATH / 'Glucose_structures').glob('*.xyz')):
             self.labels.append(system_path.stem)
-
 
     def get_ref_energies(self):
         df = pd.read_csv(DATA_PATH / 'glucose.csv')
@@ -54,7 +55,6 @@ class Glucose205_Benchmark(zntrack.Node):
         self.ref_energies = {}
         for i, label in enumerate(self.labels):
             self.ref_energies[label] = df[' dlpno/cbs(3-4)'][i] * KCAL_TO_EV
-
 
     def run(self):
         """Run new benchmark."""
@@ -64,7 +64,7 @@ class Glucose205_Benchmark(zntrack.Node):
 
         lowest_conf_label = 'alpha_002'
 
-        conf_lowest = read(DATA_PATH / 'Glucose_structures' / f'{lowest_conf_label}.xyz')
+        conf_lowest = self.get_atoms(DATA_PATH / 'Glucose_structures' / f'{lowest_conf_label}.xyz')
         conf_lowest.calc = calc
         E_conf_lowest_model = conf_lowest.get_potential_energy()
 
@@ -73,7 +73,7 @@ class Glucose205_Benchmark(zntrack.Node):
             if label == lowest_conf_label:
                 continue
             
-            atoms = read(DATA_PATH / 'Glucose_structures' / f'{label}.xyz')
+            atoms = self.get_atoms(DATA_PATH / 'Glucose_structures' / f'{label}.xyz')
             atoms.calc = calc
             atoms.info['model_rel_energy'] = atoms.get_potential_energy() - E_conf_lowest_model
             atoms.info['ref_energy'] = E_ref

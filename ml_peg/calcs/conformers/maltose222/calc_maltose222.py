@@ -38,6 +38,13 @@ class Maltose222_Benchmark(zntrack.Node):
     model: NodeWithCalculator = zntrack.deps()
     model_name: str = zntrack.params()
 
+    @staticmethod
+    def get_atoms(atoms_path):
+        atoms = read(atoms_path)
+        atoms.info['charge'] = 0
+        atoms.info['spin'] = 1
+        return atoms
+
     def get_labels(self):
         self.labels = []
         for system_path in sorted((DATA_PATH / 'Maltose_structures').glob('*.xyz')):
@@ -58,7 +65,7 @@ class Maltose222_Benchmark(zntrack.Node):
 
         lowest_conf_label = 'maltose_001'
 
-        conf_lowest = read(DATA_PATH / 'Maltose_structures' / f'{lowest_conf_label}.xyz')
+        conf_lowest = self.get_atoms(DATA_PATH / 'Maltose_structures' / f'{lowest_conf_label}.xyz')
         conf_lowest.calc = calc
         E_conf_lowest_model = conf_lowest.get_potential_energy()
 
@@ -67,7 +74,7 @@ class Maltose222_Benchmark(zntrack.Node):
             if label == lowest_conf_label:
                 continue
             
-            atoms = read(DATA_PATH / 'Maltose_structures' / f'{label}.xyz')
+            atoms = self.get_atoms(DATA_PATH / 'Maltose_structures' / f'{label}.xyz')
             atoms.calc = calc
             atoms.info['model_rel_energy'] = atoms.get_potential_energy() - E_conf_lowest_model
             atoms.info['ref_energy'] = E_ref

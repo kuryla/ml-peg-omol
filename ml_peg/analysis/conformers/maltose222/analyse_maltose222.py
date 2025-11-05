@@ -18,8 +18,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "maltose222" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "maltose222"
+CALC_PATH = CALCS_ROOT / "conformers" / "maltose222" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "conformers" / "maltose222"
 
 
 def labels() -> list:

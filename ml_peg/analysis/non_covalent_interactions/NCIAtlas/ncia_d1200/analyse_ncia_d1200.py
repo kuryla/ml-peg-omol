@@ -20,8 +20,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "NCIAtlas" / "ncia_d1200" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "NCIAtlas" / "ncia_d1200"
+CALC_PATH = CALCS_ROOT / "non_covalent_interactions" / "NCIAtlas" / "ncia_d1200" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "non_covalent_interactions" / "NCIAtlas" / "ncia_d1200"
 
 
 def labels() -> list:

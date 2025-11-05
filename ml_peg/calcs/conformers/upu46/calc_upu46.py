@@ -37,6 +37,21 @@ class UPU46_Benchmark(zntrack.Node):
     model: NodeWithCalculator = zntrack.deps()
     model_name: str = zntrack.params()
 
+    @staticmethod
+    def get_atoms(atoms_path):
+        """
+        All configurations in UPU46 
+        have a charge of -1 and
+        spin multiplicity of 1
+        """
+        atoms = read(atoms_path)
+        atoms.info['charge'] = -1
+        atoms.info['spin'] = 1
+        if atoms.calc is not None:
+            if 'energy' in atoms.calc.results:
+                del atoms.calc.results['energy']
+        return atoms
+
     def get_ref_energies(self):
         self.ref_energies = {}
         with open(DATA_PATH / 'references', 'r') as lines:
@@ -55,7 +70,7 @@ class UPU46_Benchmark(zntrack.Node):
         # Read in data and attach calculator        
         calc = self.model.get_calculator()
 
-        conf_lowest = read(DATA_PATH / f'{zero_conf_label}.xyz')
+        conf_lowest = self.get_atoms(DATA_PATH / f'{zero_conf_label}.xyz')
         conf_lowest.calc = calc
         E_conf_lowest_model = conf_lowest.get_potential_energy()
 
@@ -64,9 +79,10 @@ class UPU46_Benchmark(zntrack.Node):
             if label == zero_conf_label:
                 continue
             
-            atoms = read(DATA_PATH / f'{label}.xyz')
+            atoms = self.get_atoms(DATA_PATH / f'{label}.xyz')
             atoms.calc = calc
             atoms.info['model_rel_energy'] = atoms.get_potential_energy() - E_conf_lowest_model
+            print(label, atoms.get_potential_energy(), E_conf_lowest_model, atoms.info['model_rel_energy'], E_ref)
             atoms.info['ref_energy'] = E_ref
             
             write_dir = OUT_PATH / self.model_name

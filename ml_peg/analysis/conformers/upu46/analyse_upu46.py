@@ -18,8 +18,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "upu46" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "upu46"
+CALC_PATH = CALCS_ROOT / "conformers" / "upu46" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "conformers" / "upu46"
 
 
 def labels() -> list:
@@ -59,18 +59,21 @@ def conformer_energies() -> dict[str, list]:
         Dictionary of all reference and predicted barrier heights.
     """
     results = {"ref": []} | {mlip: [] for mlip in MODELS}
+    ref_stored = False
 
     for model_name in MODELS:
         for label in labels():
             atoms = read(CALC_PATH / model_name / f'{label}.xyz')
 
             results[model_name].append(atoms.info['model_rel_energy'])
-            results['ref'].append(atoms.info['ref_energy'])
+            if not ref_stored:
+                results['ref'].append(atoms.info['ref_energy'])
             
             # Write structures for app
             structs_dir = OUT_PATH / model_name
             structs_dir.mkdir(parents=True, exist_ok=True)
             write(structs_dir / f"{label}.xyz", atoms)
+        ref_stored = True
     return results
 
 

@@ -21,8 +21,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "37conf8" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "37conf8"
+CALC_PATH = CALCS_ROOT / "conformers" / "37conf8" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "conformers" / "37conf8"
 
 
 def labels() -> list:
@@ -34,12 +34,8 @@ def labels() -> list:
     list
         List of all system names.
     """
-    labels_list = []
     for model_name in MODELS:
-        for system_path in sorted((CALC_PATH / model_name).glob("*")):
-            labels_list.append(system_path.stem)
-        break  # only need the first model to list available systems
-    return labels_list
+        return [path.stem for path in sorted((CALC_PATH / model_name).glob("*"))]
 
 
 @pytest.fixture
@@ -67,7 +63,6 @@ def conformer_energies() -> dict[str, list]:
     for model_name in MODELS:
         for label in labels():
             atoms = read(CALC_PATH / model_name / f'{label}.xyz')
-
             results[model_name].append(atoms.info['model_rel_energy'])
             
             if not ref_stored:

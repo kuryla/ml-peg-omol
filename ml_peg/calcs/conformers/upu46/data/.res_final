@@ -1,0 +1,50 @@
+w=$1
+ref=2p
+#ref=1a
+# estimated CCSD(T)/CBS* after Hansen/Grimme: scaled MP2/CBS(DT) , DLPNO-CCSD(T)/def2-TZVP with TCutPairs 1e-5
+tmer2 $ref 1a x -1 1 $w  4.87
+tmer2 $ref 1b x -1 1 $w  2.97
+tmer2 $ref 1c x -1 1 $w  8.90
+tmer2 $ref 1g x -1 1 $w  2.22
+tmer2 $ref 1p x -1 1 $w  2.02
+tmer2 $ref 2a x -1 1 $w  3.14
+tmer2 $ref 2p x -1 1 $w  0.00
+tmer2 $ref 5z x -1 1 $w  0.57
+tmer2 $ref 6p x -1 1 $w  3.32
+tmer2 $ref 7a x -1 1 $w  7.26
+tmer2 $ref aa x -1 1 $w  3.96
+tmer2 $ref 1e x -1 1 $w  11.13
+tmer2 $ref 0a x -1 1 $w  4.82
+tmer2 $ref 1f x -1 1 $w  14.41
+tmer2 $ref 9a x -1 1 $w  5.15
+tmer2 $ref 4b x -1 1 $w  5.48
+tmer2 $ref 3a x -1 1 $w  6.84
+tmer2 $ref 7p x -1 1 $w  3.90
+tmer2 $ref 8d x -1 1 $w  6.43
+tmer2 $ref 3d x -1 1 $w  5.42
+tmer2 $ref 0b x -1 1 $w  6.70
+tmer2 $ref 1m x -1 1 $w  5.60
+tmer2 $ref 2h x -1 1 $w  10.42
+tmer2 $ref 3b x -1 1 $w  6.09
+tmer2 $ref 4g x -1 1 $w  8.48
+tmer2 $ref 4p x -1 1 $w  10.24
+tmer2 $ref 5d x -1 1 $w  5.68
+tmer2 $ref 6d x -1 1 $w  9.44
+tmer2 $ref 6g x -1 1 $w  8.03
+tmer2 $ref 6n x -1 1 $w  11.08
+tmer2 $ref 7d x -1 1 $w  5.84
+tmer2 $ref 7r x -1 1 $w  13.98
+tmer2 $ref pa x -1 1 $w  4.92
+tmer2 $ref 0i x -1 1 $w  6.74
+tmer2 $ref 1L x -1 1 $w  3.25
+tmer2 $ref 1o x -1 1 $w  14.66
+tmer2 $ref 1t x -1 1 $w  8.04
+tmer2 $ref 1z x -1 1 $w  5.99
+tmer2 $ref 2o x -1 1 $w  6.73
+tmer2 $ref 4a x -1 1 $w  6.34
+tmer2 $ref 4d x -1 1 $w  6.82
+tmer2 $ref 4n x -1 1 $w  12.32
+tmer2 $ref 4s x -1 1 $w  18.20
+tmer2 $ref 5j x -1 1 $w  14.80
+tmer2 $ref 5q x -1 1 $w  12.48
+tmer2 $ref 6j x -1 1 $w  16.61

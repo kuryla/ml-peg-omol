@@ -80,6 +80,7 @@ class IONPI19_Benchmark(zntrack.Node):
         18: ['1','-1'],
         19: ['1','-1']}
     
+    @staticmethod
     def get_atoms(path):
         chrg = path / 'CHRG'
         mol_fname = path / 'mol.xyz'
@@ -92,7 +93,7 @@ class IONPI19_Benchmark(zntrack.Node):
                 for line in lines:
                     items = line.strip().split()
                     charge = int(items[0])
-        atoms.info['charge'] = charge
+        atoms.info['charge'] = int(charge)
         return atoms
 
     def get_ref_energies(self):

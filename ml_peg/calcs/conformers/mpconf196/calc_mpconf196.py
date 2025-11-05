@@ -38,11 +38,20 @@ class MPCONF196_Benchmark(zntrack.Node):
     model: NodeWithCalculator = zntrack.deps()
     model_name: str = zntrack.params()
 
+    @staticmethod
+    def get_atoms(atoms_path):
+        atoms = read(atoms_path)
+        atoms.info['charge'] = 0
+        atoms.info['spin'] = 1
+        return atoms
+
     def get_ref_energies(self):
-        df = pd.read_csv(DATA_PATH / 'Energies_CCSD(T).xlsx', sheet_name='Old vs New CCSD(T) Reference Va', header=3)
+        df = pd.read_excel(DATA_PATH / 'Energies_CCSD(T).xlsx', sheet_name='Old vs New CCSD(T) Reference Va', header=1)
         self.ref_energies = {}
         for row in df.iterrows():
             label = row[1][0]
+            if label[-1].isnumeric():
+                label = label.replace('_', '')
             E_ref = float(row[1][2]) * KCAL_TO_EV
             self.ref_energies[label] = E_ref
 
@@ -55,20 +64,26 @@ class MPCONF196_Benchmark(zntrack.Node):
 
         for molecule in MOLECULES:
             model_abs_energies = []
+            ref_abs_energies = []
+            current_molecule_labels = []
             for label, E_ref in self.ref_energies.items():
                 group_label = label.split('_')[0]
+                if label[-1].isnumeric():
+                    label = label.replace('_', '')
                 if molecule != group_label:
                     continue
-                # Skip the reference conformer for which the error is automatically zero 
-                
-                atoms = read(DATA_PATH / f'{label}.xyz')
+                atoms = self.get_atoms(DATA_PATH / f'{label}.xyz')
+                atoms.translate(-atoms.get_center_of_mass())
                 atoms.calc = calc
-                model_abs_energies = atoms.get_potential_energy()
+                model_abs_energies.append(atoms.get_potential_energy())
+                ref_abs_energies.append(E_ref)
+                current_molecule_labels.append(label)
 
-            for i, (label, E_ref) in enumerate(self.ref_energies.items()):
-                atoms = read(DATA_PATH / f'{label}.xyz')
-                atoms.info['ref_energy'] = E_ref
-                atoms.info['model_rel_energy'] = model_abs_energies[i] - np.mean(model_abs_energies)
+            for label, E_model in zip(current_molecule_labels, model_abs_energies):
+                atoms = self.get_atoms((DATA_PATH / f'{label}.xyz'))
+                atoms.translate(-atoms.get_center_of_mass())
+                atoms.info['ref_rel_energy'] = self.ref_energies[label] - np.mean(ref_abs_energies)
+                atoms.info['model_rel_energy'] = E_model - np.mean(model_abs_energies)
                 
                 write_dir = OUT_PATH / self.model_name
                 write_dir.mkdir(parents=True, exist_ok=True)

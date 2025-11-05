@@ -21,8 +21,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "solv_mpconf196" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "solv_mpconf196"
+CALC_PATH = CALCS_ROOT / "conformers" / "solv_mpconf196" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "conformers" / "solv_mpconf196"
 MOLECULES = ['FGG', 'GFA', 'GGF', 'WG', 'WGG', 'CAMVES', 'CHPSAR', 'COHVAW', 'GS464992', 'GS557577', 'POXTRD', 'SANGLI', 'YIVNOG']
 
 
@@ -68,7 +68,7 @@ def conformer_energies() -> dict[str, list]:
             atoms = read(CALC_PATH / model_name / f'{label}.xyz')
             results[model_name].append(atoms.info['model_rel_energy'])
             if not ref_stored:
-                results['ref'].append(atoms.info['ref_energy'])
+                results['ref'].append(atoms.info['ref_rel_energy'])
             
             # Write structures for app
             structs_dir = OUT_PATH / model_name

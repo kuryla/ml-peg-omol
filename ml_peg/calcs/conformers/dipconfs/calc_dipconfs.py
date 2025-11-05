@@ -41,6 +41,12 @@ class DIPCONFS_Benchmark(zntrack.Node):
     model: NodeWithCalculator = zntrack.deps()
     model_name: str = zntrack.params()
 
+    @staticmethod
+    def get_atoms(atoms_path):
+        atoms = read(atoms_path)
+        atoms.info['charge'] = 0
+        atoms.info['spin'] = 1
+        return atoms
 
     def run(self):
         """Run new benchmark."""
@@ -61,12 +67,12 @@ class DIPCONFS_Benchmark(zntrack.Node):
             label = label.replace('/', '-')
 
             # Get zero ref conformer model energy
-            zero_conf = read(DATA_PATH / zero_conf_label / 'struc.xyz')
+            zero_conf = self.get_atoms(DATA_PATH / zero_conf_label / 'struc.xyz')
             zero_conf.calc = calc
             E_model_zero_conf = zero_conf.get_potential_energy()
             
             # Get current conformer model energy
-            atoms = read(DATA_PATH / label / 'struc.xyz')
+            atoms = self.get_atoms(DATA_PATH / label / 'struc.xyz')
             atoms.calc = calc
             atoms.info['model_rel_energy'] = atoms.get_potential_energy() - E_model_zero_conf
             atoms.info['ref_energy'] = E_rel_ref

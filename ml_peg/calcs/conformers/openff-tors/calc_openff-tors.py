@@ -36,10 +36,6 @@ OUT_PATH = Path(__file__).parent / "outputs"
 
 
 class OpenFF_Tors_Benchmark(zntrack.Node):
-    """
-
-    """
-    
     model: NodeWithCalculator = zntrack.deps()
     model_name: str = zntrack.params()
 
@@ -50,15 +46,17 @@ class OpenFF_Tors_Benchmark(zntrack.Node):
             data = json.load(file)
 
         for molecule_id, conf in data.items():
-            charge = conf['metadata']['mol_charge']
-            spin = conf['metadata']['mol_multiplicity']
+            charge = int(conf['metadata']['mol_charge'])
+            spin = int(conf['metadata']['mol_multiplicity'])
             smiles = conf['metadata']['mapped_smiles']
-            mol = Chem.MolFromSmiles(smiles)
+            params = Chem.SmilesParserParams()
+            params.removeHs = False
+            mol = Chem.MolFromSmiles(smiles, params)
             symbols = [atom.GetSymbol() for atom in mol.GetAtoms()]
             atom_map = {atom.GetIntProp("molAtomMapNumber"): idx for idx, atom in enumerate(mol.GetAtoms()) if atom.HasProp("molAtomMapNumber")}
-            remapped_symbols = [symbols[atom_map[i]] for i in range(len(symbols))]
+            remapped_symbols = [symbols[atom_map[i]] for i in range(1, len(symbols)+1)]
 
-            for i, (ref_energy, positions) in enumerate(zip(conf['metadata']['final_energies'], conf['metadata']['final_geometries'])):
+            for i, (ref_energy, positions) in enumerate(zip(conf['final_energies'], conf['final_geometries'])):
                 label = f"{molecule_id}_{i}"
                 atoms = Atoms(symbols=remapped_symbols, positions=np.array(positions)*units.Bohr)
                 atoms.info['charge'] = charge
@@ -71,10 +69,9 @@ class OpenFF_Tors_Benchmark(zntrack.Node):
                 else:
                     atoms.info['ref_rel_energy'] = ref_energy * units.Hartree - E_ref_zero_conf
                     atoms.info['model_rel_energy'] = atoms.get_potential_energy() - E_model_zero_conf
-                    
-                write_dir = OUT_PATH / self.model_name
-                write_dir.mkdir(parents=True, exist_ok=True)
-                write(write_dir / f"{label}.xyz", atoms)
+                    write_dir = OUT_PATH / self.model_name
+                    write_dir.mkdir(parents=True, exist_ok=True)
+                    write(write_dir / f"{label}.xyz", atoms)
 
 
 def build_project(repro: bool = False) -> None:

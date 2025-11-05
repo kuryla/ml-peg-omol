@@ -1,0 +1,9 @@
+Each directory contains 37Conf8 structures in xyz XMOL format 
+optimized by directory name method.
+
+The 2nd line of each file contains energy of optimized structure
+in kcal/mol for MNDO, AM1, RM1, PM3, PM6, PM7, MMFF94 and 
+in a.u. for PBEPBE-D3, DFTB3, QM, GFN-xTB, GFN2-xTB.
+
+File 37Conf8_data.xlsx contains absolute and relative SP and OPT conformational
+energies as well as dihedral angles.

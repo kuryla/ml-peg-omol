@@ -90,6 +90,8 @@ class NCIA_HB300SPXx10_Benchmark(zntrack.Node):
             xyz_fname = f"{label}.xyz"
             atoms = read(data_path / 'geometries' / xyz_fname)
             atoms_a, atoms_b = self.get_monomers(atoms)
+            atoms.info['spin'] = 1
+            atoms.info['charge'] = int(atoms_a.info['charge'] + atoms_b.info['charge'])
             atoms.calc = calc
             atoms_a.calc = calc
             atoms_b.calc = calc

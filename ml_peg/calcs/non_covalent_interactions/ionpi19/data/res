@@ -1,0 +1,27 @@
+if [ "$TMER" == "" ]
+then
+  tmer=tmer2++
+else
+  tmer=$TMER
+fi
+w=$1
+
+$tmer  1_{AB,A,B}    x 1 -1 -1 $w -39.09   #C6H6 + Li+
+$tmer  2_{AB,A,B}    x 1 -1 -1 $w -25.63   #C6H6 + Na+
+$tmer  3_{AB,A,B}    x 1 -1 -1 $w -19.90   #C6H6 + K+
+$tmer  4_{AB,A,B}    x 1 -1 -1 $w -14.81   #Cytosine + Na+
+$tmer  5_{AB,A,B}    x 1 -1 -1 $w -25.65   #Adenine(5) + Li+
+$tmer  6_{AB,A,B}    x 1 -1 -1 $w -19.74   #Guanine(5) + Na+
+$tmer  7_{AB,A,B}    x 1 -1 -1 $w -21.51   #Anthracene + C3H3+
+$tmer  8_{AB,A,B}    x 1 -1 -1 $w -14.57   #(C6F6) + Cl-
+$tmer  9_{AB,A,B}    x 1 -1 -1 $w -10.41   #Thymine + Cl-
+$tmer 10_{AB,A,B}    x 1 -1 -1 $w -1.93    #Adenine(6) + Cl-
+$tmer 11_{AB,A,B}    x 1 -1 -1 $w -5.70    #Guanine(6) + Cl-
+$tmer 12_{AB,A,B}    x 1 -1 -1 $w -18.56   #(C3N3F3)  + Cl-
+$tmer 13_{AB,A,B}    x 1 -1 -1 $w -33.66   #(C3N3F3)2 + Cl-
+$tmer 14_{AB,A,B}    x 1 -1 -1 $w -45.03   #(C3N3F3)3 + Cl-
+$tmer 15_{AB,A,B}    x 1 -1 -1 $w -29.43   #Calixarene + NO3-
+$tmer 16_{AB,B} 15_A x 1 -1 -1 $w -26.27   #Calixarene + SCN-
+$tmer 17_{AB,A,B}    x 1 -1 -1 $w -37.17   #Cyclophane host-guest
+$tmer 18_{A,B}       x 1 -1    $w -5.01    #Ester folded - extended
+$tmer 19_{A,B}       x 1 -1    $w -2.42    #Seesaw cation/pi - pi/pi

@@ -94,6 +94,8 @@ class NCIA_R739x5_Benchmark(zntrack.Node):
             if np.isin(atoms.numbers, [2, 10, 18, 36, 54, 86]).any() and EXCLUDE_NOBLE_GASES:
                 continue
             atoms_a, atoms_b = self.get_monomers(atoms)
+            atoms.info['spin'] = 1
+            atoms.info['charge'] = int(atoms_a.info['charge'] + atoms_b.info['charge'])
             atoms.calc = calc
             atoms_a.calc = calc
             atoms_b.calc = calc

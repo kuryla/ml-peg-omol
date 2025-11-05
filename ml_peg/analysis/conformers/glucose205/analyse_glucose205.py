@@ -18,8 +18,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "glucose205" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "glucose205"
+CALC_PATH = CALCS_ROOT / "conformers" / "glucose205" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "conformers" / "glucose205"
 
 
 def labels() -> list:
