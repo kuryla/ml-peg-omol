@@ -20,8 +20,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "tmconf" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "tmconf"
+CALC_PATH = CALCS_ROOT / "tm_complexes" / "tmconf" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "tm_complexes" / "tmconf"
 print(APP_ROOT)
 
 def labels() -> list:

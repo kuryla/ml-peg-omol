@@ -20,8 +20,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "mobh35" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "mobh35"
+CALC_PATH = CALCS_ROOT / "tm_complexes" / "mobh35" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "tm_complexes" / "mobh35"
 
 # Sort out the prefixes of reactants, products, ts
 reactant_prefixes = {i: [f'r{i}'] for i in range(1, 36)}

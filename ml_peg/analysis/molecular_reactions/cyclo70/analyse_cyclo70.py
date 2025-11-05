@@ -22,8 +22,8 @@ MODELS = load_models(current_models)
 
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
-CALC_PATH = CALCS_ROOT / "single_point" / "cyclo70" / "outputs"
-OUT_PATH = APP_ROOT / "data" / "single_point" / "cyclo70"
+CALC_PATH = CALCS_ROOT / "molecular_reactions" / "cyclo70" / "outputs"
+OUT_PATH = APP_ROOT / "data" / "molecular_reactions" / "cyclo70"
 
 
 def labels() -> list:
