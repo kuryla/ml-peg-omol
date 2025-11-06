@@ -1,8 +1,15 @@
 stages:
-  mace-omol_GSCDB138Benchmark:
-    cmd: zntrack run calc_GSCDB138.GSCDB138Benchmark --name mace-omol_GSCDB138Benchmark
+  uma_m_omol_ROST61Benchmark:
+    cmd: zntrack run calc_ROST61.ROST61Benchmark --name uma_m_omol_ROST61Benchmark
     metrics:
-    - nodes/mace-omol/GSCDB138Benchmark/node-meta.json:
+    - nodes/uma_m_omol/ROST61Benchmark/node-meta.json:
         cache: true
     params:
-    - mace-omol_GSCDB138Benchmark
+    - uma_m_omol_ROST61Benchmark
+  uma_s_omol_ROST61Benchmark:
+    cmd: zntrack run calc_ROST61.ROST61Benchmark --name uma_s_omol_ROST61Benchmark
+    metrics:
+    - nodes/uma_s_omol/ROST61Benchmark/node-meta.json:
+        cache: true
+    params:
+    - uma_s_omol_ROST61Benchmark

@@ -29,9 +29,9 @@ product_prefixes = {i: [f'p{i}'] for i in range(1, 36)}
 ts_prefixes = {i: [f'ts{i}'] for i in range(1, 36)}
 
 for i in [1, 2, 32, 33]:
-    reactant_prefixes[i] = [f'r{i}+.xyz']
-    product_prefixes[i] = [f'p{i}+.xyz']
-    ts_prefixes[i] = [f'ts{i}+.xyz']
+    reactant_prefixes[i] = [f'r{i}+']
+    product_prefixes[i] = [f'p{i}+']
+    ts_prefixes[i] = [f'ts{i}+']
 
 reactant_prefixes[30] = ['r30_r31']
 reactant_prefixes[31] = ['r30_r31']
@@ -47,6 +47,8 @@ for i in [17, 18, 19, 20]:
     product_prefixes[i].append('PEt3')
 product_prefixes[35].append('CH4')
 
+print(ts_prefixes)
+
 
 def labels() -> list:
     """
@@ -58,7 +60,7 @@ def labels() -> list:
         List of all system names.
     """
     for model_name in MODELS:
-        labels_list = [path.stem.replace('ts', '').replace('+', '') for path in sorted((CALC_PATH / model_name).glob("ts*"))]
+        labels_list = [int(path.stem.replace('ts', '').replace('+', '')) for path in sorted((CALC_PATH / model_name).glob("ts*"))]
         return labels_list
 
 
@@ -93,7 +95,7 @@ def barrier_heights() -> dict[str, list]:
             structs_dir = OUT_PATH / model_name
             structs_dir.mkdir(parents=True, exist_ok=True)
 
-            for prefix in ts_prefixes:
+            for prefix in ts_prefixes[label]:
                 atoms = read(CALC_PATH / model_name / f'{prefix}.xyz')
                 forward_barrier += atoms.info['model_energy']
                 reverse_barrier += atoms.info['model_energy']
@@ -102,12 +104,12 @@ def barrier_heights() -> dict[str, list]:
                     results['ref'].append(atoms.info['ref_reverse_barrier'])
                 write(structs_dir / f"{prefix}.xyz", atoms)
             
-            for prefix in reactant_prefixes:
+            for prefix in reactant_prefixes[label]:
                 atoms = read(CALC_PATH / model_name / f'{prefix}.xyz')
                 forward_barrier -= atoms.info['model_energy']
                 write(structs_dir / f"{prefix}.xyz", atoms)
             
-            for prefix in product_prefixes:
+            for prefix in product_prefixes[label]:
                 atoms = read(CALC_PATH / model_name / f'{prefix}.xyz')
                 reverse_barrier -= atoms.info['model_energy']
                 write(structs_dir / f"{prefix}.xyz", atoms)
@@ -166,7 +168,7 @@ def get_rmse(barrier_heights) -> dict[str, float]:
 
 @pytest.fixture
 @build_table(
-    filename=OUT_PATH / "mobh35_barriers_metrics_table.json",
+    filename=OUT_PATH / "mobh35_metrics_table.json",
     metric_tooltips={
         "Model": "Name of the model",
         "MAE": "Mean Absolute Error (eV)",
@@ -198,7 +200,7 @@ def metrics(get_mae: dict[str, float], get_rmse: dict[str, float]) -> dict[str, 
 
 def test_mobh35_barriers(metrics: dict[str, dict]) -> None:
     """
-    Run bh9_barriers test.
+    Run mobh35 test.
 
     Parameters
     ----------

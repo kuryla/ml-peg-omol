@@ -22,7 +22,7 @@ KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
 CALC_PATH = CALCS_ROOT / "tm_complexes" / "tmconf" / "outputs"
 OUT_PATH = APP_ROOT / "data" / "tm_complexes" / "tmconf"
-print(APP_ROOT)
+
 
 def labels() -> list:
     """
@@ -33,8 +33,9 @@ def labels() -> list:
     list
         List of all system names.
     """
-    labels_list = [path.stem for path in sorted(CALC_PATH.glob('*.xyz'))]
-    return labels_list
+    for model_name in MODELS:
+        labels_list = [path.stem for path in sorted((CALC_PATH / model_name).glob('*.xyz'))]
+        return labels_list
 
 
 @pytest.fixture
@@ -63,7 +64,7 @@ def interaction_energies() -> dict[str, list]:
     for model_name in MODELS:
         for label in labels():
             atoms = read(CALC_PATH / model_name / f'{label}.xyz')
-            # Get model and ref energies of the zero enegry conformation
+            # Get model and ref energies of the zero energy conformation
             if label[-1] == '1':
                 E_zero_model = atoms.info['model_energy']
                 E_zero_ref = atoms.info['ref_energy']
@@ -84,7 +85,7 @@ def interaction_energies() -> dict[str, list]:
 
 
 @pytest.fixture
-def get_mae(energies) -> dict[str, float]:
+def get_mae(interaction_energies) -> dict[str, float]:
     """
     Get mean absolute error for energies.
 
@@ -101,13 +102,13 @@ def get_mae(energies) -> dict[str, float]:
     results = {}
     for model_name in MODELS:
         results[model_name] = mae(
-            energies["ref"], energies[model_name]
+            interaction_energies["ref"], interaction_energies[model_name]
         )
     return results
 
 
 @pytest.fixture
-def get_rmse(energies) -> dict[str, float]:
+def get_rmse(interaction_energies) -> dict[str, float]:
     """
     Get root mean square error for energies.
 
@@ -124,7 +125,7 @@ def get_rmse(energies) -> dict[str, float]:
     results = {}
     for model_name in MODELS:
         results[model_name] = rmse(
-            energies["ref"], energies[model_name]
+            interaction_energies["ref"], interaction_energies[model_name]
         )
     return results
 

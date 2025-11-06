@@ -29,23 +29,9 @@ MODELS = load_models(current_models)
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
 
-DATA_PATH = Path(__file__).parent / "data"
+#DATA_PATH = Path(__file__).parent / "data"
+DATA_PATH = Path('/home/dk584/work/data_for_ml_peg/mobh35')
 OUT_PATH = Path(__file__).parent / "outputs"
-
-
-def process_atoms(path):
-    with open(path) as lines:
-        for i, line in enumerate(lines):
-            if i == 1:
-                items = line.strip().split()
-                charge = int(items[0])
-                spin = int(items[1])
-
-    atoms = read(path)
-    del atoms.info
-    atoms.info['charge'] = charge
-    atoms.info['spin'] = spin
-    return atoms
 
 
 class MOBH35_Benchmark(zntrack.Node):
@@ -64,7 +50,8 @@ class MOBH35_Benchmark(zntrack.Node):
                     continue
                 items = line.strip().split()
                 label = int(items[0])
-            
+
+                self.ref_barriers[label] = {}
                 self.ref_barriers[label]['forward'] = float(items[4]) * KCAL_TO_EV
                 self.ref_barriers[label]['reverse'] = float(items[5]) * KCAL_TO_EV
 
@@ -76,12 +63,14 @@ class MOBH35_Benchmark(zntrack.Node):
         
         calc = self.model.get_calculator()
 
-        for fname in (DATA_PATH / 'structures').glob('*'):
+        for fname in tqdm((DATA_PATH / 'structures').glob('*')):
             atoms = read(fname)
+            
             if '+' in fname.stem:
                 atoms.info['charge'] = 1
             else:
                 atoms.info['charge'] = 0
+            atoms.info['spin'] = 1
 
             atoms.calc = calc
             atoms.info['model_energy'] = atoms.get_potential_energy()

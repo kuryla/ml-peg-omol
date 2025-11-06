@@ -29,7 +29,8 @@ MODELS = load_models(current_models)
 KCAL_TO_EV = units.kcal / units.mol
 EV_TO_KCAL = 1 / KCAL_TO_EV
 
-DATA_PATH = Path(__file__).parent / "data"
+#DATA_PATH = Path(__file__).parent / "data"
+DATA_PATH = Path('/home/dk584/work/data_for_ml_peg/TMCONF5')
 OUT_PATH = Path(__file__).parent / "outputs"
 
 
@@ -68,13 +69,16 @@ class TMCONF_Benchmark(zntrack.Node):
         """Run new benchmark."""
 
         # Read in data and attach calculator
-        self.get_ref_energies(DATA_PATH / 'TMCONF5')
+        self.get_ref_energies(DATA_PATH)
         
         calc = self.model.get_calculator()
 
-        for label, ref_energy in self.get_ref_energies.items():
-            xyz_path = DATA_PATH / f"{label}_cc.xyz"
+        for label, ref_energy in tqdm(self.ref_energies.items()):
+            xyz_path = DATA_PATH / f"{label}-cc.xyz"
             atoms = read(xyz_path)
+            del atoms.info['Energy']
+            atoms.info['spin'] = 1
+            atoms.info['charge'] = 0
             atoms.calc = calc
 
             atoms.info['model_energy'] = atoms.get_potential_energy()

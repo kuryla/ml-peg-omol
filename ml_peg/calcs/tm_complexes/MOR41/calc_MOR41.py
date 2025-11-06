@@ -157,6 +157,8 @@ def energy_cached(atoms, calc, cache_dir: Path, cache_tag: str) -> float:
         except Exception:
             pass
     cpy = atoms.copy()
+    cpy.info['charge'] = 0
+    cpy.info['spin'] = 1
     cpy.calc = calc
     e = float(cpy.get_potential_energy())
     fpath.write_text(json.dumps({"E": e}))

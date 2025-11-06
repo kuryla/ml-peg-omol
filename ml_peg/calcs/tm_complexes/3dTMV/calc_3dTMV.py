@@ -44,8 +44,7 @@ def get_dirs() -> tuple[Path, Path]:
     if env:
         candidates.append(Path(env))
     candidates += [
-        Path("/Users/Lilyes/Documents/Work/notebooks_mp/3dtmv/3dtmv_structures"),
-        Path("/Users/Lilyes/Documents/GitHub/benchmarks-mp/3dtmv/3dtmv_structures"),
+        Path("/home/dk584/work/ml-peg-omol/ml_peg/calcs/tm_complexes/3dTMV/data/3dtmv_structures")
     ]
 
     structures_dir = None
