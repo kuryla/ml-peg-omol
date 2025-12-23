@@ -93,9 +93,9 @@ class VL11Benchmark(zntrack.Node):
             start_id = monomer_indices[i]
             end_id = monomer_indices[i + 1]
             monomer = atoms[start_id:end_id]
-            monomer.info["charge"] = self.MONOMER_CHARGES.get(
-                label, np.zeros(len(monomer_indices) - 1)
-            )[i]
+            monomer.info["charge"] = int(
+                self.MONOMER_CHARGES.get(label, np.zeros(len(monomer_indices) - 1))[i]
+            )
             monomer.info["spin"] = 1
             monomers_list.append(monomer)
         return monomers_list
