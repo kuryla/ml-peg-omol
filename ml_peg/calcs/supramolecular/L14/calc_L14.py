@@ -120,11 +120,13 @@ class L14Benchmark(zntrack.Node):
             atoms.info["charge"] = 0
             atoms.info["spin"] = 1
             atoms.calc = calc
+            atoms.translate(-atoms.get_center_of_mass())
             model_int_energy = atoms.get_potential_energy()
 
             monomers_list = self.get_monomers(atoms, label)
             for monomer in monomers_list:
                 monomer.calc = calc
+                monomer.translate(-monomer.get_center_of_mass())
                 model_int_energy -= monomer.get_potential_energy()
 
             atoms.info["model_int_energy"] = model_int_energy
