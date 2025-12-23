@@ -33,7 +33,11 @@ class L14Benchmark(zntrack.Node):
     model: NodeWithCalculator = zntrack.deps()
     model_name: str = zntrack.params()
 
-    """ Starting indices of monomers. """
+    """
+    Starting indices of monomers.
+    Some complexes contain more than two monomers.
+    Starting atom index of each monomer is given below.
+    """
     MONOMER_START_ATOMS = {
         "2a": [0, 72],
         "2b": [0, 72],
@@ -97,7 +101,7 @@ class L14Benchmark(zntrack.Node):
     def run(self):
         """Run new benchmark."""
         # Read in data and attach calculator
-        data_path = Path("L14")
+        data_path = Path("/home/dk584/.cache/ml_peg/L14")
         """
         data_path = (
             download_s3_data(
